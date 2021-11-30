@@ -1,0 +1,24 @@
+{
+  "name": "2021-05-test-local",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Brioche23/2021-05-test-local.git"
+  },
+  "author": "Alessio Brioschi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Brioche23/2021-05-test-local/issues"
+  },
+  "homepage": "https://github.com/Brioche23/2021-05-test-local#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^4.4.0"
+  }
+}
