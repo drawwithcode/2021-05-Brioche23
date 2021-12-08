@@ -3,14 +3,17 @@ Brioschi Alessio
 Creative Coding 2021-22
 
 Assignment_05
+"Collaorative Drawing:
+create a web experience where more that two people can interact"
 
+Idea
+Create a platform where more people can complete the drawing
+of Handsome Squidward 
 
 MOUSE
-left click  : 
-
-KEYS
-
+left click + drag : draw line
 */
+
 //  Activating socket io
 let clientSocket = io();
 let nPlayers = 0;
@@ -18,7 +21,6 @@ clientSocket.on("connect", newConnection);
 clientSocket.on("mouseBroadcast", newBroadcast);
 clientSocket.on("number", newNumber);
 clientSocket.on("playerBroadcast", (data) => {
-  console.log("PRENDO N PLAYER");
   nPlayers = data;
   console.log("nPlayers:", nPlayers);
 });
@@ -27,18 +29,23 @@ function newConnection() {
   console.log(clientSocket.id);
 }
 
+//  Drawing the lines of the other clients
 function newBroadcast(data) {
   console.log(data);
+  //  Setting the color
   stroke(color(data.hue, 100, 100));
+  //  Drawing the line
   line(data.px, data.py, data.x, data.y);
 }
 
 let n;
 let index = 0;
 let gotNumber = false;
+//  Function to obtain how many players are connected so I can alternate the images displayed
 function newNumber(data) {
   n = data;
   console.log("data:", data);
+  //  Switch-case to get the right index of the image
   switch (n % 3) {
     case 0:
       index = 3;
@@ -53,29 +60,32 @@ function newNumber(data) {
       index = 0;
   }
   if (index != 0) gotNumber = true;
-  console.log("index-AAAA:", index);
+
+  //  Calling the preload after getting the index
   preload();
 }
 
 let img;
 let font;
 let song;
+//  Loading assets
 function preload() {
   console.log("preload!");
   font = loadFont("./assets/fonts/krabby-patty.ttf");
   song = loadSound("./assets/songs/spongebob.mp3");
+  //  If I got an Index then I can load the image too
   if (gotNumber) img = loadImage("./assets/img/" + index + ".png");
 }
 
 let hue;
 let strokeColor;
+//  Setting up the parameters
 function setup() {
   createCanvas(windowWidth, windowHeight);
   background("#b0d7c4");
-  // noStroke();
   strokeWeight(4);
-  console.log("img:", img);
   imageMode(CENTER);
+  //  Positioning the image
   image(
     img,
     (width / 3) * 2,
@@ -83,18 +93,17 @@ function setup() {
     (img.width / img.height) * height,
     height
   );
+  //  I use HSB so that I can pass only the HUE value to the server
   colorMode(HSB);
   hue = random(360);
   strokeColor = color(hue, 100, 100);
   textFont(font);
   rectMode(CENTER);
-  // textLeading(60);
   textAlign(CENTER);
 }
 
 function draw() {
-  console.log(n);
-
+  //  Continuously draw the text so that it stays on top
   push();
   noStroke();
   textSize(35);
@@ -107,12 +116,12 @@ function draw() {
     100,
     width / 3
   );
-  // text("Drawing bois: " + nPlayers, 0, 200, width / 3);
   pop();
 }
+
+//  Draw the line and send message to the Server
 function mouseDragged() {
   stroke(strokeColor);
-
   strokeCap(ROUND);
   line(pmouseX, pmouseY, mouseX, mouseY);
 
@@ -125,12 +134,14 @@ function mouseDragged() {
   };
   clientSocket.emit("mouse", message);
 
+  //  Play the song when I'm drawing
   if (!song.isPlaying()) {
     console.log("PLAY");
     song.loop();
   }
 }
 
+//  Pause the song when I release the mouse
 function mouseReleased() {
   console.log("PAUSE");
   song.pause();
