@@ -73,7 +73,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   background("#b0d7c4");
   // noStroke();
-  strokeWeight(5);
+  strokeWeight(4);
   console.log("img:", img);
   imageMode(CENTER);
   image(
@@ -94,7 +94,7 @@ function setup() {
 
 function draw() {
   console.log(n);
-  if (!song.isPlaying()) song.loop();
+
   push();
   noStroke();
   textSize(35);
@@ -124,6 +124,14 @@ function mouseDragged() {
     hue: hue,
   };
   clientSocket.emit("mouse", message);
+
+  if (!song.isPlaying()) {
+    console.log("PLAY");
+    song.loop();
+  }
 }
-//  Use mouseMoved function to send information to server
-function mouseMoved() {}
+
+function mouseReleased() {
+  console.log("PAUSE");
+  song.pause();
+}
