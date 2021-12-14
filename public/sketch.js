@@ -14,6 +14,8 @@ MOUSE
 left click + drag : draw line
 */
 
+//  Using scribble.js library to emulate handdrawn lines
+var scribble = new Scribble();
 //  Activating socket io
 let clientSocket = io();
 let nPlayers = 0;
@@ -35,7 +37,7 @@ function newBroadcast(data) {
   //  Setting the color
   stroke(color(data.hue, 100, 100));
   //  Drawing the line
-  line(data.px, data.py, data.x, data.y);
+  scribble.scribbleLine(data.px, data.py, data.x, data.y);
 }
 
 let n;
@@ -83,7 +85,7 @@ let strokeColor;
 function setup() {
   createCanvas(windowWidth, windowHeight);
   background("#b0d7c4");
-  strokeWeight(4);
+  strokeWeight(3);
   imageMode(CENTER);
   //  Positioning the image
   image(
@@ -123,7 +125,8 @@ function draw() {
 function mouseDragged() {
   stroke(strokeColor);
   strokeCap(ROUND);
-  line(pmouseX, pmouseY, mouseX, mouseY);
+  scribble.scribbleLine(pmouseX, pmouseY, mouseX, mouseY);
+  // line(pmouseX, pmouseY, mouseX, mouseY);
 
   let message = {
     x: mouseX,
